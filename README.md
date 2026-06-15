@@ -1,50 +1,319 @@
-# AI News Aggregator - Live Build Repository
+# 🤖 AI News Aggregator
 
-This repository accompanies my 3-hour live coding session where I build a complete AI-powered news aggregator from scratch. This is a **private repository** containing valuable implementation details and deployment strategies used in production environments.
+An automated AI news aggregation and email delivery system that collects the latest AI-related content from multiple sources, stores it in a PostgreSQL database, processes articles, and delivers curated news updates via email.
 
-## Project Structure
+---
 
-This project is organized across three branches, each corresponding to a different phase of the build:
+# 📌 Project Overview
 
-- **`master`** - Part 1: Local setup and core functionality
-- **`deployment`** - Part 2: Deployment configuration and infrastructure
-- **`deployment-final`** - Part 3: Final optimizations and production-ready changes
+The AI industry moves extremely fast, with updates being published daily across blogs, research labs, and YouTube channels.
 
-Each branch serves as an intermediate checkpoint, allowing you to reference the exact state of the codebase at any point during the video.
+This project automates the entire workflow:
 
-## How This Video Works
+1. Collect AI news from multiple sources.
+2. Store articles and videos in a PostgreSQL database.
+3. Process and organize content.
+4. Generate AI-powered digests (when API credits are available).
+5. Deliver curated news through email.
 
-This is a **live coding build**, not a traditional step-by-step tutorial. Here's what to expect:
+The goal is to create a personalized AI newsletter system that eliminates the need to manually track multiple AI news sources.
 
-- **Fast-paced development** - I code at my natural pace, leveraging AI tools extensively
-- **AI-assisted workflow** - You won't see every code snippet or file generation in real-time
-- **Real-world approach** - This condenses 20-40 hours of learning into a single session
-- **Not cookie-cutter** - Unlike structured tutorials, this reflects how coding actually happens in practice
+---
 
-## How to Follow Along
+# 🏗️ System Architecture
 
-### Recommended Approach (Maximum Learning)
+```text
+YouTube Channels
+        │
+        ▼
+  YouTube Scraper
+        │
+        ▼
+    PostgreSQL
+        ▲
+        │
+ OpenAI Scraper
+        │
+        ▼
+ Anthropic Scraper
+        │
+        ▼
+  Content Processing
+        │
+        ▼
+ Digest Generation
+        │
+        ▼
+   Email Delivery
+```
 
-1. **Clone this repository** before starting the video
-2. **Keep a local copy ready** on your system as you code along
-3. **Use intermediate checkpoints** - When I make major updates or run tests, pause and:
-   - Reference the corresponding branch in this repository
-   - Copy relevant code snippets into your project
-   - Use AI coding assistants to help you reach the same checkpoint
-4. **Iterate step-by-step** - Don't rush ahead. Ensure each phase works before moving forward
-5. **Expect confusion** - Some parts will move fast and may not be immediately clear. This is where real learning happens
+---
 
-### Alternative Approach (Not Recommended)
+# ✨ Features
 
-You can skip ahead to the `deployment-final` branch and try to get everything working, but you'll miss the iterative problem-solving process that makes this valuable.
+### News Collection
 
-## Why This Approach?
+* Scrapes AI-related YouTube channels
+* Collects OpenAI articles
+* Collects Anthropic articles
+* Supports RSS-based content ingestion
 
-Traditional tutorials show you the "right way" to do things. This video shows you the **real way** - with AI assistance, rapid iteration, debugging, and adapting on the fly. By following along and hitting the same checkpoints, you'll:
+### Database Storage
 
-- Learn how to effectively leverage AI coding tools
-- Understand the thought process behind architectural decisions
-- Experience real-world development workflows
-- Build muscle memory through hands-on practice
+* PostgreSQL database
+* Structured article storage
+* Duplicate prevention
+* Historical content tracking
 
-**The most valuable learning happens when you struggle, reference the code, and push through to the next checkpoint.**
+### Content Processing
+
+* Transcript extraction from YouTube videos
+* Article processing pipeline
+* Content normalization
+
+### AI Digest Generation
+
+* OpenAI API integration
+* Automated article summarization
+* Digest generation
+* Article ranking
+
+### Email Distribution
+
+* Automated email delivery
+* HTML email formatting
+* Personalized digest generation
+
+---
+
+# 🛠️ Tech Stack
+
+## Backend
+
+* Python 3.14
+* SQLAlchemy
+* PostgreSQL
+* Docker
+
+## Data Collection
+
+* Feedparser
+* Requests
+* BeautifulSoup4
+* YouTube Transcript API
+
+## AI
+
+* OpenAI API
+* Pydantic
+
+## Infrastructure
+
+* Docker Desktop
+* Docker Compose
+
+## Email
+
+* SMTP
+* Gmail App Password Authentication
+
+---
+
+# 📂 Project Structure
+
+```text
+ai-news-aggregator/
+│
+├── app/
+│   ├── agent/
+│   │   ├── curator_agent.py
+│   │   ├── digest_agent.py
+│   │   └── email_agent.py
+│   │
+│   ├── database/
+│   │   ├── connection.py
+│   │   ├── create_tables.py
+│   │   ├── models.py
+│   │   └── repository.py
+│   │
+│   ├── scrapers/
+│   │   ├── youtube.py
+│   │   ├── openai.py
+│   │   └── anthropic.py
+│   │
+│   ├── services/
+│   ├── profiles/
+│   ├── runner.py
+│   └── daily_runner.py
+│
+├── docker/
+│   └── docker-compose.yml
+│
+├── main.py
+├── pyproject.toml
+└── README.md
+```
+
+---
+
+# ⚙️ Setup
+
+## Clone Repository
+
+```bash
+git clone https://github.com/your-username/ai-news-aggregator.git
+cd ai-news-aggregator
+```
+
+---
+
+## Create Virtual Environment
+
+```bash
+python -m venv .venv
+```
+
+Activate:
+
+### Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+### Linux / Mac
+
+```bash
+source .venv/bin/activate
+```
+
+---
+
+## Install Dependencies
+
+```bash
+pip install -e .
+```
+
+---
+
+## Configure Environment Variables
+
+Create a `.env` file:
+
+```env
+OPENAI_API_KEY=your_api_key
+
+MY_EMAIL=your_email@gmail.com
+APP_PASSWORD=your_gmail_app_password
+
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=ai_news_aggregator
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5433
+```
+
+---
+
+## Start PostgreSQL
+
+```bash
+cd docker
+docker compose up -d
+```
+
+---
+
+## Create Database Tables
+
+```bash
+python app/database/create_tables.py
+```
+
+---
+
+# 🚀 Running the Project
+
+## Run Scrapers
+
+```bash
+python -m app.runner
+```
+
+---
+
+## Run Full Pipeline
+
+```bash
+python main.py
+```
+
+---
+
+## Send Email Updates
+
+```bash
+python send_simple_email.py
+```
+
+---
+
+# 📊 Example Output
+
+```text
+YouTube videos: 8
+OpenAI articles: 51
+Anthropic articles: 23
+```
+
+---
+
+# 🔥 Challenges Solved
+
+During development:
+
+* Configured Docker and PostgreSQL locally
+* Resolved database connection conflicts
+* Managed environment variables securely
+* Integrated email delivery using Gmail SMTP
+* Implemented scraping and storage pipelines
+* Automated content aggregation workflows
+
+---
+
+# 📈 Future Improvements
+
+* Web dashboard
+* User authentication
+* Scheduled background jobs
+* Multi-user newsletters
+* Advanced article ranking
+* Vector search and semantic retrieval
+* Streamlit/React frontend
+* Deployment on AWS/GCP/Azure
+
+---
+
+# 🎯 Learning Outcomes
+
+This project strengthened my understanding of:
+
+* Python backend development
+* PostgreSQL database design
+* Docker containerization
+* API integration
+* Web scraping
+* Email automation
+* AI-powered content processing
+* End-to-end data pipelines
+
+---
+
+# 👨‍💻 Author
+
+**Dhanush Kumar**
+
+Passionate about AI, automation, backend engineering, and building practical AI-powered products.
+
+Feel free to connect and collaborate.
